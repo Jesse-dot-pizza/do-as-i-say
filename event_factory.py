@@ -1,38 +1,41 @@
 from abc import ABC, abstractmethod
+from collections import deque
 
-
-class Direction:
-    pass
-
-class Up(Direction):
-    pass
-
-class Down(Direction):
-    pass
-
-class Left(Direction):
-    pass
-
-class Right(Direction):
-    pass
 
 class Event:
-    def __init__(self, direction: Direction) -> None:
-        self.direction = direction
+    pass
 
-class KeyboardEvent(Event):
-    def __init__(self, direction: Direction) -> None:
-        super().__init__(direction)
+class Up(Event):
+    pass
 
-class VoiceEvent(Event):
-    def __init__(self, direction: Direction) -> None:
-        super().__init__(direction)
+class Down(Event):
+    pass
+
+class Left(Event):
+    pass
+
+class Right(Event):
+    pass
 
 class EventFactory(ABC):
     @abstractmethod
-    def new_voice_event(direction):
-        return VoiceEvent(direction)
+    def new_voice_event(event: Event):
+        event_queue.new_voice_event(event)
 
     @abstractmethod
-    def new_keyboard_event(direction):
-        return KeyboardEvent(direction)
+    def new_keyboard_event(event: Event):
+        event_queue.new_keyboard_event(event)
+
+
+class EventQueue:
+    def __init__(self) -> None:
+        self.keyboard_events = deque()
+        self.voice_events = deque()
+
+    def new_keyboard_event(self, event: Event):
+        self.keyboard_events.append(event)
+    
+    def new_voice_event(self, event: Event):
+        self.voice_events.append(event)
+
+event_queue = EventQueue()

@@ -15,10 +15,10 @@ class Controller:
         self.ui.play_feedback(result)
         
     def wait_for_response(self):
-        sample_response_pair =  (events.VoiceEvent(events.Down), events.KeyboardEvent(events.Up))
+        sample_response_pair =  (events.Down, events.Up)
         #later this will be something else, obvs.
         return sample_response_pair
 
-
+win = ui.PygameWindow()
 controller = Controller()
 controller.game_loop()

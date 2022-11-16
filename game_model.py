@@ -1,10 +1,10 @@
 import event_factory as events
 
 sample_level_data = [
-    (events.VoiceEvent(events.Up), events.KeyboardEvent(events.Down)),
-    (events.VoiceEvent(events.Down), events.KeyboardEvent(events.Up)),
-    (events.VoiceEvent(events.Left), events.KeyboardEvent(events.Right)),
-    (events.VoiceEvent(events.Right), events.KeyboardEvent(events.Left))
+    (events.Up, events.Down),
+    (events.Down, events.Up),
+    (events.Left, events.Right),
+    (events.Right, events.Left)
 ]
 
 class Level:

@@ -43,7 +43,7 @@ class PygameWindow:
                 if event.key == pygame.K_RIGHT:
                     return events.EventFactory.new_keyboard_event(events.Right())
                     print("Key A has been released")
-    
+
     def animate(self):
         window = pygame.display.set_mode(window_dimensions)
         pygame.display.set_caption("Do as I say not as I do")
@@ -65,6 +65,28 @@ class SpeechRecognizer(sr.Recognizer):
         super().__init__()
         self.mic = sr.Microphone()
         self.energy_threshold = 4000
+        self.audio_data = None
+    
+    def listen_for_audio(self, seconds):
+        with self.mic as source:
+            audio_data = self.record(source, duration=seconds)
+        self.audio_data = audio_data
+        return audio_data
+
+    def process_audio_data(self, audio_data: sr.AudioData):
+        result = self.recognize_google(audio_data)
+        return result
+
+    def record_audio_to_wav(self):
+
+        with self.mic as source:
+            print("Say something!")
+            audio = self.record(source, duration=10)
+
+        # write audio to a WAV file
+        with open("sfx\microphone-results.wav", "wb") as f:
+            f.write(audio.get_wav_data())
+
 
     def recognize_speech_from_mic(recognizer, microphone):
         """Transcribe speech from recorded from `microphone`.
@@ -113,7 +135,28 @@ class SpeechRecognizer(sr.Recognizer):
 
         return response
 
+    def parse_response(self, response):
+        words_detected = response["transcription"].split()
+        if "up" in words_detected:
+            return events.Up()
+        elif "down" in words_detected:
+            return events.Down()
+        elif "left" in words_detected:
+            return events.Left()
+        elif "right" in words_detected:
+            return events.Right()
 
-test_speech = SpeechRecognizer()
-response = test_speech.recognize_speech_from_mic(test_speech.mic)
-print(response)
+pygame_window = PygameWindow()
+speech_rec = SpeechRecognizer()
+
+
+
+def get_responses():
+    voice_response = speech_rec.listen_for_audio(10)
+    speech_rec.process_audio_data(voice_response)
+
+    return voice_response
+
+
+result = get_responses()
+print(result)

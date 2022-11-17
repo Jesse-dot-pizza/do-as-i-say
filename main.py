@@ -9,15 +9,11 @@ class Controller:
         self.game_model = game_model.GameModel()
 
     def game_loop(self):
-        self.ui.show_prompts(self.game_model.sample_level.current_expected_pair)
-        voice_response, hardware_response = self.wait_for_response()
+        self.ui.show_prompts(self.game_model.current_prompt)
         result = self.game_model.evaluate_responses(voice_response, hardware_response)
         self.ui.play_feedback(result)
         
-    def wait_for_response(self):
-        sample_response_pair =  (events.Down, events.Up)
-        #later this will be something else, obvs.
-        return sample_response_pair
+
 
 win = ui.PygameWindow()
 controller = Controller()
